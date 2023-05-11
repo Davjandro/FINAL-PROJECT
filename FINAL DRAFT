@@ -1,0 +1,100 @@
+'''
+        Program Name: N64 GUI
+                   Author Name: David Tellez
+Last Date Modified: 05/11/2023
+
+This program creates a GUI that displays three N64 games including game title, game image, and game description. 
+'''
+#This imports tkinter which is used to create graphical user interfaces
+from tkinter import *
+from tkinter import ttk
+from PIL import Image, ImageTk
+#This is the Tk root widget which serves to create a window with a title. I aslo included modifications for the size and the color. 
+root = Tk()
+root.configure(bg='lightblue')
+root.title('N64 Games')
+root.geometry('800x600')
+#This creates a dictionary of game including game title, image, and description
+games = [
+    {
+        'title': 'Super Mario 64',
+        'image': 'CONTROLLER.jpg',
+        'description': 'Super Mario 64 is a 1996 platform game developed and published by Nintendo for the Nintendo 64. It is the first Super Mario game to use three-dimensional (3D) graphics.'
+    },
+    {
+        'title': 'The Legend of Zelda: Ocarina of Time',
+        'image': 'CONTROLLER.jpg',
+        'description': 'The Legend of Zelda: Ocarina of Time is a 1998 action-adventure game developed and published by Nintendo for the Nintendo 64. It is the fifth game in The Legend of Zelda series.'
+    },
+    {
+        'title': 'GoldenEye 007',
+        'image': 'CONTROLLER.jpg',
+        'description': 'GoldenEye 007 is a 1997 first-person shooter video game developed by Rare and published by Nintendo for the Nintendo 64. It is based on the 1995 James Bond film GoldenEye.'
+    },
+]
+#This creates a new frame for each game
+def create_game_frame(game):
+
+    #This loads the game image
+    image = Image.open(game['image'])
+
+    #This creates a frame for the game
+    frame = Frame(root, bg='lightgreen')
+    frame.pack(fill=BOTH, padx=10, pady=10)
+           #This adds the game description to the window
+    description_label = Label(frame,text=game['title'], font=('Arial', 20,), bg='lightgreen', wraplength=500)
+    description_label.pack(pady=10)
+    
+    #This adds the game image to the frame
+    photo = ImageTk.PhotoImage(image)
+    label = Label(frame, image=photo, bg='white')
+    label.image = photo
+    label.pack(side=LEFT)
+  
+    # This adds the exit buttons to the frame to exit the program
+    exit_button = Button(frame, text='Exit', command=root.quit)
+    exit_button.pack(side=RIGHT, padx=10, pady=10)
+
+     # This adds the view more button to the frame which opens up another window containing information on the selected game.
+    button = Button(frame, text='View More', command=lambda: view_more(game))
+    button.pack(pady=10)
+ 
+
+#This tells the program to create a new fram for every game in the games dictionary 
+for game in games:
+    create_game_frame(game)
+
+# This defines the view_more function
+def view_more(game):
+    #This creates a new window after the view more button is selected
+    new_window = Toplevel(root)
+    
+    #This sets the window title
+    new_window.title(game['title'])
+
+    #This adds the game title to the window
+    title_label = Label(new_window, text=game['title'], font=('Arial', 20), bg='white')
+    title_label.pack(pady=10)
+
+    #This loads the image for the game and add it to the window
+    image = Image.open(game['image'])
+    image = image.resize((300, 200), Image.LANCZOS)
+    photo = ImageTk.PhotoImage(image)
+    image_label = Label(new_window, image=photo)
+    image_label.image = photo
+    image_label.pack(pady=10) 
+
+    # This adds the exit button to the new window
+    exit_button = Button(new_window,text='Exit', command=root.quit)
+    exit_button.pack(side=RIGHT, padx=10, pady=10)
+    #This adds the back button which takes you back to the main window
+    back_button = Button(new_window,text='back', command=new_window.destroy)
+    back_button.pack(side=RIGHT, padx=10, pady=10)
+    #This adds the game description to the window
+    description_label = Label(new_window, text=game['description'], font=('Arial', 12), bg='white', wraplength=500)
+    description_label.pack(pady=10)
+
+
+root.mainloop()
+
+
